@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'java17'
+        maven 'maven12'
+    }
+
+    environment {
+        IMAGE_NAME = "darshanrahul/testdocker:${GIT_COMMIT}"
+    }
+
+    stages {
+
+        // 🔹 Stage 1: Git Checkout
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/DarshanRahul/ITKannadigaru-Java-based-app.git'
+            }
+        }
+
+
+        // 🔹 Stage 3: Compile
+        stage('Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+
+        // 🔹 Stage 4: Package
+        stage('Package') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        // 🔹 Stage 5: Docker Build
+        stage('Docker Build') {
+            steps {
+                sh "docker build -t ${env.IMAGE_NAME} ."
+            }
+        }
+
+        // 🔹 Stage 6: Docker Run (Test)
+        stage('Docker Test') {
+            steps {
+                sh """
+                docker run -d --name testjenkins -p 8080:8080 ${env.IMAGE_NAME}
+                """
+            }
+        }
+    }
+}
