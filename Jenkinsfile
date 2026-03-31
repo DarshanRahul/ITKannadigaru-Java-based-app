@@ -45,6 +45,8 @@ pipeline {
         stage('Docker Test') {
             steps {
                 sh """
+                docker kill testjenkins
+                docker rm testjenkins
                 docker run -d --name testjenkins -p 8080:8080 ${env.IMAGE_NAME}
                 """
             }
