@@ -45,7 +45,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f testjenkins || true
-                docker run -d --name testjenkins -p 8080:8080 ${IMAGE_NAME}
+                docker run -d --name testjenkinss -p 8080:8080 ${IMAGE_NAME}
                 '''
             }
         }
