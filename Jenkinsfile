@@ -44,8 +44,7 @@ pipeline {
         stage('Docker Test') {
             steps {
                 sh '''
-                docker rm -f testjenkins || true
-                docker run -d --name testjenkinss -p 8081:8080 ${IMAGE_NAME}
+                docker run -d --name testjenkinsss -p 8082:8080 ${IMAGE_NAME}
                 '''
             }
         }
