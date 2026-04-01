@@ -19,34 +19,41 @@ pipeline {
             }
         }
 
-
-        // 🔹 Stage 3: Compile
+        // 🔹 Stage 2: Compile
         stage('Compile') {
             steps {
                 sh 'mvn compile'
             }
         }
 
-        // 🔹 Stage 4: Package
+        // 🔹 Stage 3: Package
         stage('Package') {
             steps {
                 sh 'mvn clean package'
             }
         }
 
-        // 🔹 Stage 5: Docker Build
+        // 🔹 Stage 4: Docker Build
         stage('Docker Build') {
             steps {
-                sh "docker build -t ${env.IMAGE_NAME} ."
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
-        // 🔹 Stage 6: Docker Run (Test)
+        // 🔹 Stage 5: Docker Run (Test)
         stage('Docker Test') {
             steps {
-                docker run -d --name testjenkins -p 8080:8080 ${env.IMAGE_NAME}
-                """
+                sh '''
+                docker rm -f testjenkins || true
+                docker run -d --name testjenkins -p 8080:8080 ${IMAGE_NAME}
+                '''
             }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline completed"
         }
     }
 }
