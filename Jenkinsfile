@@ -41,13 +41,14 @@ pipeline {
         }
 
         // 🔹 Stage 5: Docker Run (Test)
-        stage('Docker Test') {
-            steps {
-                sh '''
-                docker run -d --name testjenkinsss -p 8082:8080 ${IMAGE_NAME}
-                '''
-            }
-        }
+      stage('Docker Test') {
+    steps {
+        sh '''
+        docker rm -f testjenkinsss || true
+        docker run -d --name testjenkinsss -p 8083:8080 ${IMAGE_NAME}
+        '''
+    }
+}
 		
 		 stage('Login to Docker Hub') {
             steps {
